@@ -81,6 +81,14 @@ namespace Kusto.Charting
                     numRows += nodeRows;
                     minTimestamp = ExtendedDateTime.Min(minTimestamp, node.MinTimestamp);
                     maxTimestamp = ExtendedDateTime.Max(maxTimestamp, node.MaxTimestamp);
+
+                    // Take into account the _reported_ time range as well
+                    var rtr = node.ReportedTimeRange;
+                    if (rtr != null)
+                    {
+                        minTimestamp = ExtendedDateTime.Min(minTimestamp, rtr.Value.Begin);
+                        maxTimestamp = ExtendedDateTime.Max(maxTimestamp, rtr.Value.End);
+                    }
                 }
             });
 
