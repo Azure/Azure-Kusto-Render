@@ -245,28 +245,25 @@ datetime(2017-01-01 12:00), 'A03', 'Message', 'Only one?'
                 return false;
             }
 
-            // Now walk the data, looking for our telltale pattern
+            // Now walk the data, looking for our telltale pattern.
+            // As soon as we find a row from which we can extract a parent activity ID
+            // we declare the data a worthy candidate for this visualization.
             int nRows = 0;
-            int nSuccesses = 0;
             Guid parentActivityId = Guid.Empty;
             foreach (DataRow row in data.Rows)
             {
                 if (TryLocateParentActivityId(row, ref parentActivityId))
                 {
-                    nSuccesses++;
+                    return true;
                 }
 
                 // Don't probe too much
-                if (++nRows > 10000)
+                if (++nRows > 100000)
                 {
                     break;
                 }
             }
 
-            if (nSuccesses > 2 && nSuccesses * 100 > nRows)
-            {
-                return true;
-            }
             return false;
         }
 
